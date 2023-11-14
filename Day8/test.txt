@@ -1,0 +1,52 @@
+You managed to write all this and then get network error "from collections import deque
+
+
+with open(input.txt", 'r') as file:
+    lines = file.readlines()
+    
+matrix = []
+for line in lines:
+    line = line.strip()
+    row = [char for char in line]
+    matrix.append(row)
+
+
+def is_valid_move(matrix, current_pos, next_pos):
+    current_val = matrix[current_pos[0]][current_pos[1]]
+    next_val = matrix[next_pos[0]][next_pos[1]]
+    # Check if the elevation difference is at most one or if next_val is 'E'
+    return abs(ord(current_val) - ord(next_val)) <= 1 or next_val == 'E'
+
+def find_shortest_path(matrix):
+    rows, cols = len(matrix), len(matrix[0])
+    directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]  # Right, Down, Left, Up
+    start, end = None, None
+
+    # Find the start (S) and end (E) positions
+    for i in range(rows):
+        for j in range(cols):
+            if matrix[i][j] == 'S':
+                start = (i, j)
+            elif matrix[i][j] == 'E':
+                end = (i, j)
+
+    if not start or not end:
+        return "Start or End not found in the matrix"
+
+    # BFS
+    queue = deque([(start, 0)])  # Each item is (position, steps)
+    visited = set([start])
+
+    while queue:
+        current_pos, steps = queue.popleft()
+        if current_pos == end:
+            return steps
+
+        for direction in directions:
+            next_pos = (current_pos[0] + direction[0], current_pos[1] + direction[1])
+            if 0 <= next_pos[0] < rows and 0 <= next_pos[1] < cols:
+                if next_pos not in visited and is_valid_move(matrix, current_pos, next_pos):
+                    queue.append((next_pos, steps + 1))
+                    visited.add(next_pos)
+
+    return -1  # If no path is found" is there supposed to be more code
